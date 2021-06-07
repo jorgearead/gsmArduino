@@ -1,6 +1,6 @@
 #include <SoftwareSerial.h> //Incluimos la libreria Software Serial
 
-String Numero = "55********";
+String Numero = "5561962738"; //Incamos el numero que controlara el dispositivo
 
 SoftwareSerial SIM800L(2,3); //Instanciamos el objeto SIM800L y le pasamos los parametros de los pines TX y RX
 String valor;  //Declaramos la variable de tipo String valor.
@@ -21,27 +21,40 @@ void loop() {
     validar();
   } 
 }
-
+/*Esta funcion "Validar" verificara que el numero que envio el mensaje coincida con el numero definido en la variable Numero*/
 void validar(){
-  if(valor.indexOf(Numero)>=0){
-    Serial.println("EL numero concuerda");
+  if(valor.indexOf(Numero)>=0){//Si coincide con el numero controlador hara lo siguiente:
+    Serial.println("EL numero concuerda"); //Mostrar un mensaje que diga "el numero concuerda"
     
     if(valor.indexOf("On")>=0){  //Si la var valor tiene la palabra ON hace esto:
       digitalWrite(13, HIGH);    //Se enciende el pin 13.
-      Serial.println("El Led se encendio");  //Immprime el mensaje
+      Serial.println("Led encendido");  //Immprime el mensaje
+      enviarMensaje("Led encendido");
       delay(2000);
     }
-    else if(valor.indexOf("Off")>=0){
+    else if(valor.indexOf("Off")>=0){//Si la var valor tiene la palabra Off hace esto:
       digitalWrite(13, LOW);    //Se apaga el pin 13.
-      Serial.println("El Led se apago");  //Immprime el mensaje
+      Serial.println("Led apagado");  //Immprime el mensaje
+      enviarMensaje("Led apagado");
       delay(2000);
     }
-    else{
+    else{//Si es cualquier otro mensaje
       Serial.println("Es otro mensaje");
     }
   }
-  else{
-    Serial.println("EL numero no concuerda");
+  else{//Esto pasara si el numero es diferente al establecido en la variable Numero
+    Serial.println("El numero no coincide");
   }
 }
 
+void enviarMensaje(String msj){
+  String comando_numero = "AT+CMGS=\"+52" + Numero + "\"\r\n";
+  Serial.println(comando_numero);
+  SIM800L.print(comando_numero);
+  delay(1000);
+  SIM800L.print(msj);
+  delay(1000);
+  //SIM800L.write(char(0x1A));
+  SIM800L.write(char(26));
+  delay(1000);
+}
