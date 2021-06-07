@@ -1,6 +1,6 @@
 #include <SoftwareSerial.h> //Incluimos la libreria Software Serial
 
-String Numero = "5561962738";
+String Numero = "55********";
 
 SoftwareSerial SIM800L(2,3); //Instanciamos el objeto SIM800L y le pasamos los parametros de los pines TX y RX
 String valor;  //Declaramos la variable de tipo String valor.
